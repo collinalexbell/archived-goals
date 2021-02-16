@@ -6,9 +6,13 @@ from gi.repository import Gtk
 class GoalsWindow(Gtk.Window):
     def __init__(self):
         Gtk.Window.__init__(self, title="Goals")
-        pass
-
-    def init_window(self):
         self.connect("destroy", Gtk.main_quit)
+        self.list_of_goals = Gtk.ListBox()
+        self.add(self.list_of_goals)
         self.show_all()
 
+    def add_to_goal_list(self, goal):
+        row = Gtk.ListBoxRow()
+        label = Gtk.Label(f"{goal}")
+        row.add(label)
+        self.list_of_goals.add(row)
