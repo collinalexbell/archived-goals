@@ -13,6 +13,7 @@ class GoalsWindow(Gtk.Window):
 
     def add_to_goal_list(self, goal):
         row = Gtk.ListBoxRow()
-        label = Gtk.Label(f"{goal}")
+        label = Gtk.Label(f"{goal}", xalign=0)
+        label.set_justify(Gtk.Justification.LEFT)
         row.add(label)
         self.list_of_goals.add(row)
