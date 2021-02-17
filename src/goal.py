@@ -46,19 +46,3 @@ class Goal:
     def delete(self):
         if self.doc_id is not None:
             self.repo.delete_one({"_id": self.doc_id})
-
-
-if __name__ == "__main__":
-    Goal.init_repo()
-    mongo_goal = Goal("get mongodb working", datetime.datetime(2021, 2, 15))
-    mongo_goal.save()
-    goals = Goal.get_all()
-    for goal in goals:
-        pprint.pprint(goal)
-    mongo_goal.add_tag("test")
-    goals = Goal.get_all()
-    for goal in goals:
-        pprint.pprint(goal)
-
-    mongo_goal.delete()
-    
