@@ -2,6 +2,12 @@ import datetime
 import unittest
 import pprint
 
+import sys, os
+testdir = os.path.dirname(__file__)
+srcdir = '../src'
+sys.path.insert(0, os.path.abspath(os.path.join(testdir, srcdir)))
+
+
 from goal import Goal
 
 class TestGoal(unittest.TestCase):
