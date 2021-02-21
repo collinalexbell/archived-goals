@@ -5,12 +5,10 @@ from gi.repository import Gtk
 class AddGoalWidget(Gtk.Frame):
     def __init__(self):
         Gtk.Frame.__init__(self, label="Add Goal")
-        self.add_stuff()
+        self.init_widget_content()
 
-    def add_stuff(self):
-
+    def init_widget_content(self):
         self.content = Gtk.VBox()
-
         self.name_row = NameRow()
         self.date_row = DateRow()
         self.add_button = Gtk.Button(label="Add Goal")
