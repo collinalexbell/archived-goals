@@ -9,13 +9,16 @@ class GoalsWindow(Gtk.Window):
     def __init__(self):
         Gtk.Window.__init__(self, title="Goals")
         self.main_box = Gtk.VBox()
-        self.add_goal_widget = AddGoalWidget()
+        self.add_goal_widget = AddGoalWidget(self.add_goal_callback)
         self.connect("destroy", Gtk.main_quit)
         self.list_of_goals = Gtk.ListBox()
         self.add(self.main_box)
         self.main_box.add(self.list_of_goals)
         self.main_box.add(self.add_goal_widget)
         self.show_all()
+
+    def add_goal_callback(self, goal):
+        print(goal)
 
     def add_to_goal_list(self, goal):
         row = Gtk.ListBoxRow()
