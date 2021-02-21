@@ -13,9 +13,12 @@ class AddGoalWidget(Gtk.Frame):
 
         self.name_row = NameRow()
         self.date_row = DateRow()
+        self.add_button = Gtk.Button(label="Add Goal")
+        self.add_button.set_size_request(50, 20)
 
         self.content.add(self.name_row)
         self.content.add(self.date_row)
+        self.content.pack_end(self.add_button, False, False, 10)
         self.add(self.content)
 
 class DateRow(Gtk.HBox):
