@@ -3,19 +3,10 @@ import pymongo
 import datetime
 
 class Goal:
-    @classmethod
-    def init_repo(cls):
-        client = pymongo.MongoClient()
-        cls.repo = client.holon.goals
-
-    @classmethod
-    def get_all(cls):
-        return cls.repo.find()
-
     def __init__(self, name, deadline):
         self.name = name
         self.deadline = deadline
-        self.doc_id = None
+        self.id = None
         self.tags = []
 
     def __str__(self):
@@ -24,25 +15,37 @@ class Goal:
     def add_tag(self, tag):
         if type(tag) is str:
             self.tags.append(tag)
-            self.replace()
         else:
             raise Exception('tag must be a string')
 
-    def to_doc(self):
-        return {"name": self.name, "deadline": self.deadline, "tags": self.tags}
 
-    def replace(self):
-        update_result = self.repo.replace_one(
-            {"_id": self.doc_id}, self.to_doc())
+class Repo:
+    @classmethod
+    def to_doc(cls, goal):
+        return {"name": goal.name, "deadline": goal.deadline, "tags": goal.tags}
+
+    def __init__(self):
+        client = pymongo.MongoClient()
+        self.db = client.holon.goals
+
+    def get_all(self):
+        return self.db.find()
+
+    def replace(self, goal):
+        update_result = self.db.replace_one(
+            {"_id": goal.id}, Repo.to_doc(goal))
         return update_result.matched_count
 
 
-    def save(self):
-        doc = self.to_doc()
-        self.doc_id = self.repo.insert_one(doc).inserted_id
-        return self.doc_id
+    def save(self, goal):
+        doc = Repo.to_doc(goal)
+        goal.id = self.db.insert_one(doc).inserted_id
+        return goal.id
 
 
-    def delete(self):
-        if self.doc_id is not None:
-            self.repo.delete_one({"_id": self.doc_id})
+    def delete(self, goal):
+        if goal.id is not None:
+            self.db.delete_one({"_id": goal.id})
+
+
+

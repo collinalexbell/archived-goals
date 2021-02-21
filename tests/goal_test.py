@@ -9,23 +9,25 @@ sys.path.insert(0, os.path.abspath(os.path.join(testdir, srcdir)))
 
 
 from goal import Goal
+from goal import Repo as GoalRepo
 
 class TestGoal(unittest.TestCase):
     def test_add_tag(self):
-        Goal.init_repo()
+        repo = GoalRepo()
         mongo_goal = Goal("get mongodb working", datetime.datetime(2021, 2, 15))
-        mongo_goal.save()
+        repo.save(mongo_goal)
 
-        goals = Goal.get_all()
+        goals = repo.get_all()
         self.assertEqual(goals[0]['name'], 'get mongodb working')
         self.assertEqual(len(goals[0]['tags']), 0)
 
         mongo_goal.add_tag("test")
-        goals = Goal.get_all()
+        repo.replace(mongo_goal)
+        goals = repo.get_all()
         self.assertEqual(len(goals[0]['tags']), 1)
         self.assertEqual(goals[0]['tags'][0], 'test')
 
-        mongo_goal.delete()
+        repo.delete(mongo_goal)
 
 if __name__ == '__main__':
     unittest.main()
