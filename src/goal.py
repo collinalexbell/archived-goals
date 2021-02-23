@@ -18,6 +18,9 @@ class Goal:
         else:
             raise Exception('tag must be a string')
 
+    def set_id(self, id: str):
+        self.id = id
+
 
 class Repo:
     @classmethod
@@ -29,6 +32,7 @@ class Repo:
         goal = Goal(goal_doc['name'], goal_doc['deadline'])
         for tag in goal_doc['tags']:
             goal.add_tag(tag)
+        goal.set_id(goal_doc['_id'])
         return goal
 
     def __init__(self):
