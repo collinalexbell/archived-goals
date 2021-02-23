@@ -6,7 +6,7 @@ from gi.repository import Gtk
 from add_goal_widget import AddGoalWidget
 
 class GoalsWindow(Gtk.Window):
-    def __init__(self):
+    def __init__(self, repo):
         Gtk.Window.__init__(self, title="Goals")
         self.main_box = Gtk.VBox()
         self.add_goal_widget = AddGoalWidget(self.add_goal_callback)
@@ -15,10 +15,13 @@ class GoalsWindow(Gtk.Window):
         self.add(self.main_box)
         self.main_box.add(self.list_of_goals)
         self.main_box.add(self.add_goal_widget)
+        self.goals_repo = repo
         self.show_all()
 
     def add_goal_callback(self, goal):
-        print(goal)
+        self.add_to_goal_list(goal)
+        self.show_all()
+        self.goals_repo.save(goal)
 
     def add_to_goal_list(self, goal):
         row = Gtk.ListBoxRow()

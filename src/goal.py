@@ -23,13 +23,24 @@ class Repo:
     @classmethod
     def to_doc(cls, goal):
         return {"name": goal.name, "deadline": goal.deadline, "tags": goal.tags}
+    
+    @classmethod
+    def from_doc(cls, goal_doc):
+        goal = Goal(goal_doc['name'], goal_doc['deadline'])
+        for tag in goal_doc['tags']:
+            goal.add_tag(tag)
+        return goal
 
     def __init__(self):
         client = pymongo.MongoClient()
         self.db = client.holon.goals
 
     def get_all(self):
-        return self.db.find()
+        docs = self.db.find()
+        rv = []
+        for doc in docs:
+            rv.append(Repo.from_doc(doc))
+        return rv
 
     def replace(self, goal):
         update_result = self.db.replace_one(
