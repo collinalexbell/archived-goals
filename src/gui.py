@@ -4,44 +4,36 @@ gi.require_version("Gtk", "3.0")
 from gi.repository import Gtk
 
 from add_goal_widget import AddGoalWidget
+from manage_existing_goals_widget import ManageExistingGoalsWidget
 
 class GoalsWindow(Gtk.Window):
     def __init__(self, repo):
-        Gtk.Window.__init__(self, title="Goals")
-        self.main_box = Gtk.VBox()
-        self.add_goal_widget = AddGoalWidget(self.add_goal_callback)
-        self.connect("destroy", Gtk.main_quit)
-        self.listbox = Gtk.ListBox()
-        self.list_of_goals = []
-        self.add(self.main_box)
-        self.main_box.add(self.listbox)
-
-
-        self.delete_button = Gtk.Button("Delete Goal")
-        self.delete_button.connect("clicked", self.delete_goal_handler)
-
-        self.main_box.pack_end(self.add_goal_widget, True, True, 0)
-        self.main_box.pack_end(self.delete_button, False, False, 10)
         self.goals_repo = repo
+        self.goals_from_repo = repo.get_all()
+
+        Gtk.Window.__init__(self, title="Goals")
+        self.connect("destroy", Gtk.main_quit)
+
+        self.main_box = Gtk.VBox()
+        self.add(self.main_box)
+
+        self.manage_existing_goals_widget = ManageExistingGoalsWidget(self.delete_goal_callback)
+        for goal in self.goals_from_repo:
+            self.manage_existing_goals_widget.add_to_goal_list(goal)
+        self.main_box.add(self.manage_existing_goals_widget)
+
+        self.add_goal_widget = AddGoalWidget(self.add_goal_callback)
+        self.main_box.pack_end(self.add_goal_widget, True, True, 0)
+
         self.show_all()
 
     def add_goal_callback(self, goal):
-        self.add_to_goal_list(goal)
+        self.manage_existing_goals_widget.add_to_goal_list(goal)
         self.show_all()
         self.goals_repo.save(goal)
 
-    def add_to_goal_list(self, goal):
-        self.list_of_goals.append(goal)
-        row = Gtk.ListBoxRow()
-        label = Gtk.Label(f"{goal}", xalign=0)
-        label.set_justify(Gtk.Justification.LEFT)
-        row.add(label)
-        self.listbox.add(row)
-
-    def delete_goal_handler(self, btn):
-        row = self.listbox.get_selected_row()
-        goal = self.list_of_goals[row.get_index()]
-        del self.list_of_goals[row.get_index()]
-        print(f"goal: {goal.id}")
+    def delete_goal_callback(self, btn):
+        goal = self.manage_existing_goals_widget.get_selected_goal()
         self.goals_repo.delete(goal)
-        self.listbox.remove(row)
+
+        self.manage_existing_goals_widget.delete_selected_goal()
