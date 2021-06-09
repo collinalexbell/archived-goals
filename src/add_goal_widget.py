@@ -26,7 +26,7 @@ class AddGoalWidget(Gtk.Frame):
     def action_handler(self, btn):
         name = self.name_row.get_value()
         date = self.date_row.get_value()
-        goal = Goal(name, datetime.datetime(*date))
+        goal = Goal(name, datetime.datetime(date[0], date[1]+1, date[2]))
         self.callback(goal)
 
 class DateRow(Gtk.HBox):

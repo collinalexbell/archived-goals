@@ -11,10 +11,14 @@ class ManageExistingGoalsWidget(Gtk.Frame):
         self.content = Gtk.VBox()
         self.add(self.content)
 
+        self.scrolled_window = Gtk.ScrolledWindow()
+        self.content.add(self.scrolled_window)
+
+
         self.listbox = Gtk.ListBox()
         self.list_of_goals = []
+        self.scrolled_window.add(self.listbox)
 
-        self.content.add(self.listbox)
 
         self.delete_button = Gtk.Button("Delete Goal")
         self.delete_button.connect("clicked", self.delete_button_callback)
