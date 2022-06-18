@@ -16,14 +16,16 @@ class GoalsWindow(Gtk.Window):
         self.connect("destroy", Gtk.main_quit)
 
         self.main_box = Gtk.HBox()
-        self.notes_box = Gtk.ScrolledWindow()
+        self.notes_frame = Gtk.Frame(label="Notes")
+        self.notes_window = Gtk.ScrolledWindow()
         self.notes_text = Gtk.TextView()
         self.notes_text.get_buffer().connect("changed", self.update_notes)
-        self.notes_box.add(self.notes_text)
+        self.notes_window.add(self.notes_text)
         self.goal_box = Gtk.VBox()
         self.add(self.main_box)
         self.main_box.add(self.goal_box)
-        self.main_box.add(self.notes_box)
+        self.notes_frame.add(self.notes_window)
+        self.main_box.add(self.notes_frame)
 
         self.objectives_widget = ObjectiveWidget(
             [
@@ -69,8 +71,6 @@ class GoalsWindow(Gtk.Window):
         selected_goal = self.manage_existing_goals_widget.get_selected_goal()
         if selected_goal != None:
             new_notes = buffer.get_text(buffer.get_start_iter(), buffer.get_end_iter(), True)
-            print(new_notes)
-            print(selected_goal.get_notes())
             if(selected_goal.get_notes() != new_notes):
                 selected_goal.update_notes(new_notes)
                 self.goals_repo.replace(selected_goal)
