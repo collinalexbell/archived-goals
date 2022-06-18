@@ -8,6 +8,7 @@ class Goal:
         self.deadline = deadline
         self.id = None
         self.tags = []
+        self.notes = None
 
     def __str__(self):
         return f"{self.name} with deadline: {self.deadline}"
@@ -21,18 +22,26 @@ class Goal:
     def set_id(self, id: str):
         self.id = id
 
+    def get_notes(self):
+        return self.notes
+
+    def update_notes(self, notes):
+        self.notes = notes
+
 
 class Repo:
     @classmethod
     def to_doc(cls, goal):
-        return {"name": goal.name, "deadline": goal.deadline, "tags": goal.tags}
-    
+        return {"name": goal.name, "deadline": goal.deadline, "tags": goal.tags, "notes": goal.notes}
+
     @classmethod
     def from_doc(cls, goal_doc):
         goal = Goal(goal_doc['name'], goal_doc['deadline'])
         for tag in goal_doc['tags']:
             goal.add_tag(tag)
         goal.set_id(goal_doc['_id'])
+        if 'notes' in goal_doc:
+            goal.update_notes(goal_doc['notes'])
         return goal
 
     def __init__(self):
